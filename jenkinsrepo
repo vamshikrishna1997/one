@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages{
+        stage('checkout') {
+            steps {
+                git 'https://github.com/krishnain/SampleMaven.git'
+            }
+        }
+        stage('build') {
+         steps {
+            sh "mvn clean package"
+         }
+     }
+     stage('deploy') {
+          steps { 
+              sshagent(['1cbff687-a168-477e-b2f0-0d9fd6f7e169'])  {
+              
+             sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war centos@13.127.93.180:/usr/local/tomcat9/webapps"
+
+     }
+
+     }
+    }
+}
+}
